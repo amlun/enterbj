@@ -1,0 +1,4 @@
+package: github.com/amlun/enterbj
+import:
+- package: github.com/google/go-querystring
+- package: github.com/sirupsen/logrus
