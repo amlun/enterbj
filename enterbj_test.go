@@ -15,6 +15,11 @@ func TestClient_Login(t *testing.T) {
 }
 
 func TestClient_GetPersonInfo(t *testing.T) {
-	r, _ := ob.GetPersonInfo("xjkashdjasd")
+	r, _ := ob.GetPersonInfo()
+	t.Log(r)
+}
+
+func TestClient_CheckEnvGrade(t *testing.T) {
+	r, _ := ob.CheckEnvGrade(carId, LicenseNo, carModel, carRegTime)
 	t.Log(r)
 }
