@@ -1,7 +1,7 @@
 package enterbj
 
 import (
-	"github.com/amlun/enterbj/request"
+	"enterbj/request"
 	"time"
 )
 
@@ -43,9 +43,10 @@ func (e *Client) carListRequest() *request.CarList {
 	reqBody.AppKey = "kkk"
 	reqBody.AppSource = ""
 	reqBody.DeviceId = "ddd"
-	reqBody.Timestamp = time.Now().Unix() * 1000
+	//reqBody.Timestamp = time.Now().Unix() * 1000
 	reqBody.Token = e.session.Token
 	reqBody.UserId = e.session.UserId
+	reqBody.Platform = "02"
 	return &reqBody
 }
 

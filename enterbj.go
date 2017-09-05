@@ -3,12 +3,14 @@ package enterbj
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/amlun/enterbj/request"
-	"github.com/amlun/enterbj/response"
+	"enterbj/request"
+	"enterbj/response"
 	"github.com/google/go-querystring/query"
 	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
+	"errors"
+	"time"
 )
 
 const (
@@ -18,15 +20,59 @@ const (
 	PERSON_INFO_URL     = "https://api.accident.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/getpersonalinfor?"
 	CHECK_ENV_GRADE_URL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/checkenvgrade"
 	//LOAD_OTHER_DRIVERS_URL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers"
+	SIGN_SVC_URL 		= ""
 )
 
 func init() {
 	log.SetLevel(log.DebugLevel)
 }
 
+func NewClient(session Session, app App) (Client, error)  {
+	return Client{session: &session, app: &app}, nil
+}
+
 type Client struct {
 	session *Session
 	app     *App
+}
+
+func asyncSignature(signSvcUrl string) (string, error) {
+	res, _ := http.Get(signSvcUrl)
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Error(err)
+		return "", err
+	}
+	log.Debugf("Sign response body is [%s]", body)
+
+	var repBody response.Sign
+	err = json.Unmarshal(body, &repBody)
+	if err != nil {
+		log.Error(err)
+		return "", err
+	}
+
+	if repBody.Status != "ok" {
+		return "", errors.New("No result")
+	} else {
+		return repBody.Sign, nil
+	}
+}
+
+func (e *Client) Sign(originStr string) (string, error) {
+	var retryTimes int = 3
+	var delaySec time.Duration = 2
+
+	for i:=0; i< retryTimes; i++ {
+		sign, err := asyncSignature(SIGN_SVC_URL + originStr)
+		if err == nil && sign != "" {
+			return sign, nil
+		} else {
+			time.Sleep(delaySec * time.Second)
+		}
+	}
+	return "", errors.New("No result")
 }
 
 func (e *Client) Verify(phone string) (*response.Verify, error) {
@@ -106,6 +152,15 @@ func (e *Client) GetPersonInfo() (*response.PersonInfo, error) {
 
 func (e *Client) CarList() (*response.CarList, error) {
 	reqBody := e.carListRequest()
+	timestampStr := time.Now().Format("2006-01-02 15:04:05")
+	reqBody.Timestamp = timestampStr
+	sign, err := e.Sign(reqBody.UserId+timestampStr)
+	if err != nil {
+		log.Errorln(err)
+		return nil, errors.New("Signature failed")
+	}
+	//sign = strings.Replace(sign, "aaNVCC", "iaEJLD", -1)
+	reqBody.Sign = sign
 	r, err := query.Values(reqBody)
 	if err != nil {
 		log.Error(err)
@@ -119,6 +174,8 @@ func (e *Client) CarList() (*response.CarList, error) {
 		log.Error(err)
 		return nil, err
 	}
+	log.Debugf("car list response code is [%d]", res.StatusCode)
+
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
