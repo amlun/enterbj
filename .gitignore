@@ -15,4 +15,5 @@
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
 vendor/
+.env
 test_data.go
