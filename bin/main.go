@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/robfig/cron"
 	"os"
 	log "github.com/sirupsen/logrus"
 	"github.com/amlun/enterbj"
@@ -38,11 +37,12 @@ func main() {
 		return
 	}
 	eClient = &enterbj.Client{}
+	checkCar()
 
 	// TODO
-	c := cron.New()
-	c.AddFunc("@daily", checkCar)
-	c.Run()
+	//c := cron.New()
+	//c.AddFunc("@daily", checkCar)
+	//c.Run()
 }
 
 // TODO
@@ -51,6 +51,15 @@ func checkCar() {
 	if info, err := eClient.CarList(conf.EnterBj.UserId); err != nil {
 		log.Error("Get car list error", err)
 	} else {
-		log.Info(info)
+		for _, car := range info.DataList {
+			if car.ApplyFlag == "1" {
+				// TODO send notice
+				log.Warnf("该车辆 %s 当前可以申请，请立即申请！", car.LicenseNo)
+			} else {
+				for _, apply := range car.CarApplyArr {
+					log.Infof("车辆 %s 已经申请到进京证，时间为 %s 到 %s", apply.LicenseNo, apply.EnterBjStart, apply.EnterBjEnd)
+				}
+			}
+		}
 	}
 }
