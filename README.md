@@ -34,7 +34,7 @@ go run bin/main.go config.ini
 ```
 或者
 ```bash
-go build bin/main.go -o enterbj
+go build -o enterbj bin/main.go
 
 ./enterbj config.ini
 ```

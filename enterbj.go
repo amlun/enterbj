@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"fmt"
+	"time"
 )
 
 const (
@@ -20,8 +21,11 @@ const (
 	//LOAD_OTHER_DRIVERS_URL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers"
 )
 
+var httpClient *http.Client
+
 func init() {
 	log.SetLevel(log.DebugLevel)
+	httpClient = &http.Client{Timeout: 1 * time.Second}
 }
 
 type Client struct {
@@ -50,7 +54,7 @@ func (e *Client) Login(phone string, valicode string) (*response.Login, error) {
 	log.Debugf("login request body is [%s]", string(r))
 	req, _ := http.NewRequest("POST", LOGIN_URL, bytes.NewBuffer(r))
 	req.Header = commonHeader
-	res, err := http.DefaultClient.Do(req)
+	res, err := httpClient.Do(req)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -81,7 +85,7 @@ func (e *Client) GetPersonInfo(userId string) (*response.PersonInfo, error) {
 	log.Debugf("get person info request body is [%s]", r.Encode())
 	req, _ := http.NewRequest("GET", PERSON_INFO_URL+r.Encode(), nil)
 	req.Header = commonHeader
-	res, err := http.DefaultClient.Do(req)
+	res, err := httpClient.Do(req)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -120,7 +124,7 @@ func (e *Client) CarList(userId string) (*response.CarList, error) {
 	log.Debugf("car list request body is [%s]", r.Encode())
 	req, _ := http.NewRequest("POST", CARLIST_URL, bytes.NewBufferString(r.Encode()))
 	req.Header = commonHeader
-	res, err := http.DefaultClient.Do(req)
+	res, err := httpClient.Do(req)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -151,7 +155,7 @@ func (e *Client) CheckEnvGrade(userId, carId, licenseNo, carModel, carRegTime st
 	log.Debugf("check env grade request body is [%s]", r.Encode())
 	req, _ := http.NewRequest("POST", CHECK_ENV_GRADE_URL, bytes.NewBufferString(r.Encode()))
 	req.Header = commonHeader
-	res, err := http.DefaultClient.Do(req)
+	res, err := httpClient.Do(req)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -196,7 +200,7 @@ func (e *Client) SubmitPaper(userId, licenseNo, engineNo, carTypeCode string) (*
 	log.Debugf("submit paper request body is [%s]", r.Encode())
 	req, _ := http.NewRequest("POST", SUBMIT_PAPER_URL, bytes.NewBufferString(r.Encode()))
 	req.Header = commonHeader
-	res, err := http.DefaultClient.Do(req)
+	res, err := httpClient.Do(req)
 	if err != nil {
 		log.Error(err)
 		return nil, err
