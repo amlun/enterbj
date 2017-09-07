@@ -18,7 +18,6 @@ const (
 	PERSON_INFO_URL     = "https://api.accident.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/getpersonalinfor?"
 	CHECK_ENV_GRADE_URL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/checkenvgrade"
 	//LOAD_OTHER_DRIVERS_URL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers"
-	//SIGN_URL = ""
 )
 
 func init() {
@@ -112,7 +111,7 @@ func (e *Client) CarList(userId string) (*response.CarList, error) {
 		return nil, err
 	}
 	// 处理Sign
-	sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2)
+	sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2, e.Conf.SignUrl)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -188,7 +187,7 @@ func (e *Client) SubmitPaper(userId, licenseNo, engineNo, carTypeCode string) (*
 		return nil, err
 	}
 	// 处理Sign
-	sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2)
+	sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2, e.Conf.SignUrl)
 	if err != nil {
 		log.Error(err)
 		return nil, err

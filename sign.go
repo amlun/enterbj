@@ -20,9 +20,9 @@ const (
 	SIGN_OK         = "ok"
 )
 
-func GetSign(token, ts string, try int, sleep time.Duration) (sign string, err error) {
+func GetSign(token, ts string, try int, sleep time.Duration, signUrl string) (sign string, err error) {
 	for i := 0; i < try; i++ {
-		sign, err = getSign(token, ts)
+		sign, err = getSign(token, ts, signUrl)
 		if err != nil {
 			return "", err
 		}
@@ -35,9 +35,8 @@ func GetSign(token, ts string, try int, sleep time.Duration) (sign string, err e
 }
 
 // 注意，必须要设定SIGN_URL，否则会报错，目前该接口不对外开放 !important!
-func getSign(token, ts string) (string, error) {
-	signUrl := fmt.Sprintf(SIGN_URL, token, ts)
-
+func getSign(token, ts, signUrl string) (string, error) {
+	signUrl = fmt.Sprintf(signUrl, token, ts)
 	resp, err := http.Get(signUrl)
 	if err != nil {
 		return "", err

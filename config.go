@@ -6,4 +6,5 @@ type Config struct {
 	DeviceId  string
 	Token     string
 	Platform  string
+	SignUrl   string
 }

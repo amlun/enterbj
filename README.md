@@ -18,11 +18,13 @@ config.ini
 
 ```ini
 [test]
-userId=ABCDEFGHIJKLMNOPQRSTUVWXYZ
+userId = ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
 [enterbj]
-appkey=kkk
-appsource=bjjj
+appKey = kkk
+appSource = bjjj
+signUrl = http://127.0.0.1:8080/gensign/%s%s
+
 ```
 
 ### 运行

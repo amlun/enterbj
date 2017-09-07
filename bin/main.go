@@ -41,7 +41,7 @@ func main() {
 		log.Error("Init config file error", err)
 		return
 	}
-	eClient = &enterbj.Client{}
+	eClient = &enterbj.Client{Conf: &conf.EnterBj}
 	checkCar()
 
 	// TODO
