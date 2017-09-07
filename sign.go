@@ -34,6 +34,7 @@ func GetSign(token, ts string, try int, sleep time.Duration) (sign string, err e
 	return "", errors.New("too many times when get sign")
 }
 
+// 注意，必须要设定SIGN_URL，否则会报错，目前该接口不对外开放 !important!
 func getSign(token, ts string) (string, error) {
 	signUrl := fmt.Sprintf(SIGN_URL, token, ts)
 

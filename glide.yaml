@@ -2,3 +2,5 @@ package: github.com/amlun/enterbj
 import:
 - package: github.com/google/go-querystring
 - package: github.com/sirupsen/logrus
+- package: github.com/robfig/cron
+- package: gopkg.in/gcfg.v1

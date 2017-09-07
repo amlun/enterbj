@@ -12,7 +12,19 @@
 
 ### 配置
 
+config.ini
+
+```
+[enterbj]
+userId=1234456789
+```
+
 ### 运行
+
+```
+cd bin
+go run main.go config.ini
+```
 
 ## 版本记录
 
