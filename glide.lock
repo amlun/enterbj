@@ -1,5 +1,5 @@
 hash: cd2c7169333fa96c5077c8ac30193acf663f0b0db0c8bfa8b439c5d4de651525
-updated: 2017-09-05T14:22:14.738106562+08:00
+updated: 2017-09-06T16:26:57.438543565+08:00
 imports:
 - name: github.com/google/go-querystring
   version: 53e6ce116135b80d037921a7fdd5138cf32d7a8a
@@ -8,7 +8,7 @@ imports:
 - name: github.com/sirupsen/logrus
   version: 5e5dc898656f695e2a086b8e12559febbfc01562
 - name: golang.org/x/sys
-  version: 7ddbeae9ae08c6a06a59597f0c9edbc5ff2444ce
+  version: 9aade4d3a3b7e6d876cd3823ad20ec45fc035402
   subpackages:
   - unix
 testImports: []

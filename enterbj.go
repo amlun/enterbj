@@ -24,10 +24,7 @@ func init() {
 	log.SetLevel(log.DebugLevel)
 }
 
-type Client struct {
-	session *Session
-	app     *App
-}
+type Client struct{}
 
 func (e *Client) Verify(phone string) (*response.Verify, error) {
 	reqBody := e.verifyRequest(phone)
@@ -72,8 +69,8 @@ func (e *Client) Login(phone string, valicode string) (*response.Login, error) {
 	return &repBody, nil
 }
 
-func (e *Client) GetPersonInfo() (*response.PersonInfo, error) {
-	reqBody := e.personInfoRequest()
+func (e *Client) GetPersonInfo(userId string) (*response.PersonInfo, error) {
+	reqBody := e.personInfoRequest(userId)
 	r, err := query.Values(reqBody)
 	if err != nil {
 		log.Error(err)
@@ -104,8 +101,8 @@ func (e *Client) GetPersonInfo() (*response.PersonInfo, error) {
 
 }
 
-func (e *Client) CarList() (*response.CarList, error) {
-	reqBody := e.carListRequest()
+func (e *Client) CarList(userId string) (*response.CarList, error) {
+	reqBody := e.carListRequest(userId)
 	r, err := query.Values(reqBody)
 	if err != nil {
 		log.Error(err)
@@ -142,8 +139,8 @@ func (e *Client) CarList() (*response.CarList, error) {
 	return &repBody, nil
 }
 
-func (e *Client) CheckEnvGrade(carId string, licenseNo string, carModel string, carRegTime string) (*response.CheckEnvGrade, error) {
-	reqBody := e.checkEnvGradeRequest(carId, licenseNo, carModel, carRegTime)
+func (e *Client) CheckEnvGrade(userId, carId, licenseNo, carModel, carRegTime string) (*response.CheckEnvGrade, error) {
+	reqBody := e.checkEnvGradeRequest(userId, carId, licenseNo, carModel, carRegTime)
 	r, err := query.Values(reqBody)
 	if err != nil {
 		log.Error(err)
@@ -179,8 +176,8 @@ func (e *Client) LoadOtherDrivers() error {
 }
 
 // TODO 处理参数,sign需要解决，通过客户端处理
-func (e *Client) SubmitPaper(licenseNo, engineNo, carTypeCode string) (*response.SubmitPaper, error) {
-	reqBody := e.applySubmitRequest(licenseNo, engineNo, carTypeCode)
+func (e *Client) SubmitPaper(userId, licenseNo, engineNo, carTypeCode string) (*response.SubmitPaper, error) {
+	reqBody := e.applySubmitRequest(userId, licenseNo, engineNo, carTypeCode)
 	fmt.Println(reqBody)
 	r, err := query.Values(reqBody)
 	if err != nil {
