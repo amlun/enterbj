@@ -10,8 +10,13 @@ import (
 var conf *Config
 var eClient *enterbj.Client
 
+type Test struct {
+	UserId string
+}
+
 type Config struct {
 	EnterBj enterbj.Config
+	Test    Test
 }
 
 func InitConfig(confPath string) (*Config, error) {
@@ -48,7 +53,7 @@ func main() {
 // TODO
 // 每天运行一次，检查是否过期
 func checkCar() {
-	if info, err := eClient.CarList(conf.EnterBj.UserId); err != nil {
+	if info, err := eClient.CarList(conf.Test.UserId); err != nil {
 		log.Error("Get car list error", err)
 	} else {
 		for _, car := range info.DataList {

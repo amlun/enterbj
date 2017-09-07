@@ -10,25 +10,36 @@
 
 ## 使用说明
 
+目前SIGN处于测试中，还不对外开放
+
 ### 配置
 
 config.ini
 
-```
+```ini
+[test]
+userId=ABCDEFGHIJKLMNOPQRSTUVWXYZ
+
 [enterbj]
-userId=1234456789
+appkey=kkk
+appsource=bjjj
 ```
 
 ### 运行
 
+```bash
+go run bin/main.go config.ini
 ```
-cd bin
-go run main.go config.ini
+或者
+```bash
+go build bin/main.go -o enterbj
+
+./enterbj config.ini
 ```
 
 ## 版本记录
 
-### 当前版本
+### 当前开发版本
 
 完成基本接口的对接：
 
@@ -38,4 +49,6 @@ go run main.go config.ini
 - [ ] 登录
 - [ ] 验证码
 - [ ] 获取其他驾驶人员列表
+- [ ] 添加车辆
+- [ ] 添加其他驾驶员
 - [ ] 提交申请

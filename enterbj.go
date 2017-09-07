@@ -18,13 +18,16 @@ const (
 	PERSON_INFO_URL     = "https://api.accident.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/getpersonalinfor?"
 	CHECK_ENV_GRADE_URL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/checkenvgrade"
 	//LOAD_OTHER_DRIVERS_URL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers"
+	//SIGN_URL = ""
 )
 
 func init() {
 	log.SetLevel(log.DebugLevel)
 }
 
-type Client struct{}
+type Client struct {
+	Conf *Config
+}
 
 func (e *Client) Verify(phone string) (*response.Verify, error) {
 	reqBody := e.verifyRequest(phone)

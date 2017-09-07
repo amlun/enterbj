@@ -1,9 +1,9 @@
 package enterbj
 
 type Config struct {
-	UserId string
-	//Phone      string
-	//LicenseNo  string
-	//CarModel   string
-	//CarRegTime string
+	AppKey    string
+	AppSource string
+	DeviceId  string
+	Token     string
+	Platform  string
 }
