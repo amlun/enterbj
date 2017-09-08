@@ -40,6 +40,11 @@ go build -o enterbj bin/main.go
 ./enterbj config.ini
 ```
 
+结果：
+```
+INFO[0002] 车辆 冀A66666 已经申请到进京证，时间为 2017-09-08 到 2017-09-14 
+```
+
 ## 版本记录
 
 ### 当前开发版本
