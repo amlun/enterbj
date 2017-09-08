@@ -26,6 +26,7 @@ cp config.ini.example config.ini
 ### 配置
 
 **目前SIGN处于测试中，还不对外开放**
+修改userId为你自己的userId（别问我怎么拿到。。。。😼）
 修改config.ini文件的signUrl，（如果你可以找到的话😊）
 
 ```ini
