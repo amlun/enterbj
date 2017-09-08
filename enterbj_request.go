@@ -5,6 +5,9 @@ import (
 	"time"
 )
 
+const SimpleDate = "2006-01-02"
+const SimpleDateTime = "2006-01-02 15:04:05"
+
 func (e *Client) verifyRequest(phone string) *request.Verification {
 	var reqBody request.Verification
 	reqBody.Phone = phone
@@ -17,7 +20,7 @@ func (e *Client) loginRequest(phone string, valicode string) *request.Login {
 	reqBody.DeviceType = "0"
 	reqBody.Lon = 116.542162
 	reqBody.Phone = phone
-	reqBody.Timestamp = time.Now().Format("2006-01-01 00:00:00")
+	reqBody.Timestamp = time.Now().Format(SimpleDateTime)
 	reqBody.Source = "0"
 	reqBody.Lat = 39.937293
 	reqBody.Token = ""
@@ -44,7 +47,7 @@ func (e *Client) carListRequest(userId string) *request.CarList {
 	reqBody.AppKey = "kkk"
 	reqBody.AppSource = ""
 	reqBody.DeviceId = "ddd"
-	reqBody.Timestamp = time.Now().Format("2006-01-02 15:04:05")
+	reqBody.Timestamp = time.Now().Format(SimpleDateTime)
 	reqBody.Token = "922C90208F834084AF118EE49D6F522F"
 	reqBody.UserId = userId
 	reqBody.Platform = "02"
@@ -72,13 +75,13 @@ func (e *Client) checkEnvGradeRequest(userId, carId, licenseNo, carModel, carReg
 func (e *Client) applySubmitRequest(userId, licenseNo, engineNo, carTypeCode string) *request.SubmitPaper {
 	var reqBody request.SubmitPaper
 	reqBody.AppSource = "bjjj"
-	now := time.Now().Format("2006-01-02 15:04:05")
+	now := time.Now().Format(SimpleDateTime)
 	reqBody.Timestamp = now
 	reqBody.HiddenTime = now
 	reqBody.InbjEntranceCode1 = 05
 	reqBody.InbjEntranceCode = 12
 	reqBody.InbjDuration = 7
-	reqBody.InbjTime = time.Now().AddDate(0, 0, 1).Format("2006-01-02")
+	reqBody.InbjTime = time.Now().AddDate(0, 0, 1).Format(SimpleDate)
 	reqBody.UserId = userId
 	reqBody.LicenseNo = licenseNo
 	reqBody.EngineNo = engineNo

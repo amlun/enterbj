@@ -44,7 +44,7 @@ CarTypeCode
 <li data="06">外国汽车</li>
 <li data="26">香港入出境车</li>
 <li data="27">澳门入出境车</li>
- */
+*/
 
 // Sign 需要通过客户端获取
 // var cookieval = getCookie("enterbj_sign_session_id");

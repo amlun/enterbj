@@ -15,7 +15,7 @@ licenseno
 envGrade
 carmodel
 carregtime
- */
+*/
 
 type ApplyBjMessage struct {
 }

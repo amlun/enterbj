@@ -1,10 +1,10 @@
 package main
 
 import (
-	"os"
-	log "github.com/sirupsen/logrus"
 	"github.com/amlun/enterbj"
+	log "github.com/sirupsen/logrus"
 	"gopkg.in/gcfg.v1"
+	"os"
 )
 
 var conf *Config

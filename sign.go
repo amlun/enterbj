@@ -1,12 +1,12 @@
 package enterbj
 
 import (
-	"time"
-	"net/http"
-	"fmt"
-	"errors"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io/ioutil"
+	"net/http"
+	"time"
 )
 
 type SignResponse struct {

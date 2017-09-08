@@ -3,13 +3,13 @@ package enterbj
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"github.com/amlun/enterbj/response"
 	"github.com/google/go-querystring/query"
 	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"time"
-	"errors"
 )
 
 const (
