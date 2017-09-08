@@ -10,15 +10,8 @@ import (
 	"time"
 )
 
-const (
-	DEFAULT_TIME_OUT    = 100
-	CARLIST_URL         = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/entercarlist"
-	LOGIN_URL           = "https://bjjj.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/login"
-	SUBMIT_PAPER_URL    = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/submitpaper"
-	PERSON_INFO_URL     = "https://api.accident.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/getpersonalinfor?"
-	CHECK_ENV_GRADE_URL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/checkenvgrade"
-	//LOAD_OTHER_DRIVERS_URL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers"
-)
+// 默认的超时时间，单位为 ms
+const DefaultTimeOut = 100
 
 var (
 	initialized bool
@@ -28,10 +21,11 @@ var (
 	mutex       sync.Mutex
 )
 
+// Client 进京证办理客户端
 type Client struct {
 }
 
-// New 返回一个 Enterbj Client
+// New 返回一个 Enterbj Client对象
 func New(config *Config) *Client {
 	mutex.Lock()
 	defer mutex.Unlock()
@@ -41,7 +35,7 @@ func New(config *Config) *Client {
 	}
 	// 默认100ms
 	if config.Timeout == 0 {
-		config.Timeout = DEFAULT_TIME_OUT
+		config.Timeout = DefaultTimeOut
 	}
 	// http client
 	httpClient = &http.Client{
@@ -55,6 +49,7 @@ func New(config *Config) *Client {
 	return client
 }
 
+// Verify 验证手机号
 func (e *Client) Verify(phone string) (*response.Verify, error) {
 	reqBody := verifyRequest(phone)
 	if reqBody == nil {
@@ -70,6 +65,7 @@ func (e *Client) Verify(phone string) (*response.Verify, error) {
 	return nil, nil
 }
 
+// Login 用户登录
 func (e *Client) Login(phone string, valicode string) (*response.Login, error) {
 	req := loginRequest(phone, valicode)
 	if req == nil {
@@ -82,8 +78,9 @@ func (e *Client) Login(phone string, valicode string) (*response.Login, error) {
 	return repBody, nil
 }
 
-func (e *Client) GetPersonInfo(userId string) (*response.PersonInfo, error) {
-	req := personInfoRequest(userId)
+// GetPersonInfo 获取用户信息
+func (e *Client) GetPersonInfo(userID string) (*response.PersonInfo, error) {
+	req := personInfoRequest(userID)
 	if req == nil {
 		return nil, errors.New("generate person info request with error")
 	}
@@ -94,8 +91,9 @@ func (e *Client) GetPersonInfo(userId string) (*response.PersonInfo, error) {
 	return repBody, nil
 }
 
-func (e *Client) CarList(userId string) (*response.CarList, error) {
-	req := carListRequest(userId)
+// CarList 获取用户的车辆列表
+func (e *Client) CarList(userID string) (*response.CarList, error) {
+	req := carListRequest(userID)
 	if req == nil {
 		return nil, errors.New("generate car list request with error")
 	}
@@ -108,8 +106,9 @@ func (e *Client) CarList(userId string) (*response.CarList, error) {
 
 }
 
-func (e *Client) CheckEnvGrade(userId, carId, licenseNo, carModel, carRegTime string) (*response.CheckEnvGrade, error) {
-	req := checkEnvGradeRequest(userId, carId, licenseNo, carModel, carRegTime)
+// CheckEnvGrade 检查用户的车辆环保信息
+func (e *Client) CheckEnvGrade(userID, carID, licenseNo, carModel, carRegTime string) (*response.CheckEnvGrade, error) {
+	req := checkEnvGradeRequest(userID, carID, licenseNo, carModel, carRegTime)
 	if req == nil {
 		return nil, errors.New("generate check env grade request with error")
 	}
@@ -122,13 +121,15 @@ func (e *Client) CheckEnvGrade(userId, carId, licenseNo, carModel, carRegTime st
 }
 
 // TODO 获取cookie
+// LoadOtherDrivers 加载其他驾驶人信息
 func (e *Client) LoadOtherDrivers() error {
 	return nil
 }
 
 // TODO 处理参数,sign需要解决，通过客户端处理
-func (e *Client) SubmitPaper(userId, licenseNo, engineNo, carTypeCode string) (*response.SubmitPaper, error) {
-	req := applySubmitRequest(userId, licenseNo, engineNo, carTypeCode)
+// SubmitPaper 提交进京证申请
+func (e *Client) SubmitPaper(userID, licenseNo, engineNo, carTypeCode string) (*response.SubmitPaper, error) {
+	req := applySubmitRequest(userID, licenseNo, engineNo, carTypeCode)
 	if req == nil {
 		return nil, errors.New("generate submit paper request with error")
 	}

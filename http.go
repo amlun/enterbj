@@ -10,8 +10,23 @@ import (
 	"time"
 )
 
-const SimpleDate = "2006-01-02"
-const SimpleDateTime = "2006-01-02 15:04:05"
+const (
+	// 简单的日期格式
+	SimpleDate = "2006-01-02"
+	// 简单的日期时间格式
+	SimpleDateTime = "2006-01-02 15:04:05"
+	// 车辆列表
+	CarListUrl = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/entercarlist"
+	// 登录
+	LoginUrl = "https://bjjj.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/login"
+	// 提交进京证申请
+	SubmitPaperUrl = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/submitpaper"
+	// 个人信息
+	PersonInfoUrl = "https://api.accident.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/getpersonalinfor?"
+	// 检查环保信息
+	CheckEnvGradeUrl = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/checkenvgrade"
+	//LoadOtherDriversUrl = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers"
+)
 
 var commonHeader = http.Header{
 	"Host":             []string{"enterbj.zhongchebaolian.com"},
@@ -52,57 +67,57 @@ func loginRequest(phone string, valicode string) *http.Request {
 	if err != nil {
 		return nil
 	}
-	req, _ := http.NewRequest("POST", LOGIN_URL, bytes.NewBuffer(r))
+	req, _ := http.NewRequest("POST", LoginUrl, bytes.NewBuffer(r))
 	req.Header = commonHeader
 	return req
 }
 
-func personInfoRequest(userId string) *http.Request {
+func personInfoRequest(userID string) *http.Request {
 	var reqBody request.PersonInfo
 	reqBody.Appkey = ""
 	reqBody.Dicver = ""
 	reqBody.SN = ""
-	reqBody.UserId = userId
+	reqBody.UserId = userID
 
 	r, err := query.Values(reqBody)
 	if err != nil {
 		return nil
 	}
-	req, _ := http.NewRequest("GET", PERSON_INFO_URL+r.Encode(), nil)
+	req, _ := http.NewRequest("GET", PersonInfoUrl+r.Encode(), nil)
 	req.Header = commonHeader
 
 	return req
 }
 
-func carListRequest(userId string) *http.Request {
+func carListRequest(userID string) *http.Request {
 	var reqBody request.CarList
 	reqBody.AppKey = "kkk"
 	reqBody.AppSource = ""
 	reqBody.DeviceId = "ddd"
 	reqBody.Timestamp = time.Now().Format(SimpleDateTime)
 	reqBody.Token = "922C90208F834084AF118EE49D6F522F"
-	reqBody.UserId = userId
+	reqBody.UserId = userID
 	reqBody.Platform = "02"
-	if sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2); err != nil { // 处理Sign
+	sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2)
+	if err != nil { // 处理Sign
 		return nil
-	} else {
-		reqBody.Sign = sign
 	}
+	reqBody.Sign = sign
 
 	r, err := query.Values(reqBody)
 	if err != nil {
 		return nil
 	}
-	req, _ := http.NewRequest("POST", CARLIST_URL, bytes.NewBufferString(r.Encode()))
+	req, _ := http.NewRequest("POST", CarListUrl, bytes.NewBufferString(r.Encode()))
 	req.Header = commonHeader
 	return req
 }
 
-func checkEnvGradeRequest(userId, carId, licenseNo, carModel, carRegTime string) *http.Request {
+func checkEnvGradeRequest(userID, carID, licenseNo, carModel, carRegTime string) *http.Request {
 	var reqBody request.CheckEnvGrade
 	reqBody.AppSource = "bjjj"
-	reqBody.UserId = userId
-	reqBody.CarId = carId
+	reqBody.UserId = userID
+	reqBody.CarId = carID
 	reqBody.LicenseNo = licenseNo
 	reqBody.CarModel = carModel
 	reqBody.CarRegTime = carRegTime
@@ -111,14 +126,14 @@ func checkEnvGradeRequest(userId, carId, licenseNo, carModel, carRegTime string)
 	if err != nil {
 		return nil
 	}
-	req, _ := http.NewRequest("POST", CHECK_ENV_GRADE_URL, bytes.NewBufferString(r.Encode()))
+	req, _ := http.NewRequest("POST", CheckEnvGradeUrl, bytes.NewBufferString(r.Encode()))
 	req.Header = commonHeader
 
 	return req
 }
 
 // TODO
-func applySubmitRequest(userId, licenseNo, engineNo, carTypeCode string) *http.Request {
+func applySubmitRequest(userID, licenseNo, engineNo, carTypeCode string) *http.Request {
 	var reqBody request.SubmitPaper
 	reqBody.AppSource = "bjjj"
 	now := time.Now().Format(SimpleDateTime)
@@ -128,22 +143,22 @@ func applySubmitRequest(userId, licenseNo, engineNo, carTypeCode string) *http.R
 	reqBody.InbjEntranceCode = 12
 	reqBody.InbjDuration = 7
 	reqBody.InbjTime = time.Now().AddDate(0, 0, 1).Format(SimpleDate)
-	reqBody.UserId = userId
+	reqBody.UserId = userID
 	reqBody.LicenseNo = licenseNo
 	reqBody.EngineNo = engineNo
 	reqBody.CarTypeCode = carTypeCode
 	reqBody.VehicleType = "11"
-	if sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2); err != nil { // 处理Sign
+	sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2)
+	if err != nil { // 处理Sign
 		return nil
-	} else {
-		reqBody.Sign = sign
 	}
+	reqBody.Sign = sign
 
 	r, err := query.Values(reqBody)
 	if err != nil {
 		return nil
 	}
-	req, _ := http.NewRequest("POST", SUBMIT_PAPER_URL, bytes.NewBufferString(r.Encode()))
+	req, _ := http.NewRequest("POST", SubmitPaperUrl, bytes.NewBufferString(r.Encode()))
 	req.Header = commonHeader
 
 	return req

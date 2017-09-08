@@ -16,10 +16,13 @@ type SignResponse struct {
 }
 
 const (
-	SIGN_GENERATING = "generating"
-	SIGN_OK         = "ok"
+	// 签名正在生成中
+	SignGenerating = "generating"
+	// 签名计算OK
+	SignOK = "ok"
 )
 
+// GetSign 返回请求的签名
 func GetSign(token, ts string, try int, sleep time.Duration) (sign string, err error) {
 	for i := 0; i < try; i++ {
 		sign, err = getSign(token, ts)
@@ -36,7 +39,7 @@ func GetSign(token, ts string, try int, sleep time.Duration) (sign string, err e
 
 // 注意 `signUrl，否则会报错，目前该接口不对外开放` !important!
 func getSign(token, ts string) (string, error) {
-	resp, err := http.Get(fmt.Sprintf(conf.SignUrl, token, ts))
+	resp, err := http.Get(fmt.Sprintf(conf.SignURL, token, ts))
 	if err != nil {
 		return "", err
 	}
@@ -53,11 +56,11 @@ func getSign(token, ts string) (string, error) {
 		return "", err
 	}
 
-	if signResp.Status == SIGN_GENERATING {
+	if signResp.Status == SignGenerating {
 		return "", nil
 	}
 
-	if signResp.Status == SIGN_OK {
+	if signResp.Status == SignOK {
 		return signResp.Sign, nil
 	}
 
