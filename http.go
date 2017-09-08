@@ -11,20 +11,20 @@ import (
 )
 
 const (
-	// 简单的日期格式
+	// SimpleDate 简单的日期格式
 	SimpleDate = "2006-01-02"
-	// 简单的日期时间格式
+	// SimpleDateTime 简单的日期时间格式
 	SimpleDateTime = "2006-01-02 15:04:05"
-	// 车辆列表
-	CarListUrl = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/entercarlist"
-	// 登录
-	LoginUrl = "https://bjjj.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/login"
-	// 提交进京证申请
-	SubmitPaperUrl = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/submitpaper"
-	// 个人信息
-	PersonInfoUrl = "https://api.accident.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/getpersonalinfor?"
-	// 检查环保信息
-	CheckEnvGradeUrl = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/checkenvgrade"
+	// CarListURL 车辆列表
+	CarListURL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/entercarlist"
+	// LoginURL 登录
+	LoginURL = "https://bjjj.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/login"
+	// SubmitPaperURL 提交进京证申请
+	SubmitPaperURL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/submitpaper"
+	// PersonInfoURL 个人信息
+	PersonInfoURL = "https://api.accident.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/getpersonalinfor?"
+	// CheckEnvGradeURL 检查环保信息
+	CheckEnvGradeURL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/checkenvgrade"
 	//LoadOtherDriversUrl = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers"
 )
 
@@ -67,7 +67,7 @@ func loginRequest(phone string, valicode string) *http.Request {
 	if err != nil {
 		return nil
 	}
-	req, _ := http.NewRequest("POST", LoginUrl, bytes.NewBuffer(r))
+	req, _ := http.NewRequest("POST", LoginURL, bytes.NewBuffer(r))
 	req.Header = commonHeader
 	return req
 }
@@ -83,7 +83,7 @@ func personInfoRequest(userID string) *http.Request {
 	if err != nil {
 		return nil
 	}
-	req, _ := http.NewRequest("GET", PersonInfoUrl+r.Encode(), nil)
+	req, _ := http.NewRequest("GET", PersonInfoURL+r.Encode(), nil)
 	req.Header = commonHeader
 
 	return req
@@ -108,7 +108,7 @@ func carListRequest(userID string) *http.Request {
 	if err != nil {
 		return nil
 	}
-	req, _ := http.NewRequest("POST", CarListUrl, bytes.NewBufferString(r.Encode()))
+	req, _ := http.NewRequest("POST", CarListURL, bytes.NewBufferString(r.Encode()))
 	req.Header = commonHeader
 	return req
 }
@@ -126,7 +126,7 @@ func checkEnvGradeRequest(userID, carID, licenseNo, carModel, carRegTime string)
 	if err != nil {
 		return nil
 	}
-	req, _ := http.NewRequest("POST", CheckEnvGradeUrl, bytes.NewBufferString(r.Encode()))
+	req, _ := http.NewRequest("POST", CheckEnvGradeURL, bytes.NewBufferString(r.Encode()))
 	req.Header = commonHeader
 
 	return req
@@ -158,7 +158,7 @@ func applySubmitRequest(userID, licenseNo, engineNo, carTypeCode string) *http.R
 	if err != nil {
 		return nil
 	}
-	req, _ := http.NewRequest("POST", SubmitPaperUrl, bytes.NewBufferString(r.Encode()))
+	req, _ := http.NewRequest("POST", SubmitPaperURL, bytes.NewBufferString(r.Encode()))
 	req.Header = commonHeader
 
 	return req

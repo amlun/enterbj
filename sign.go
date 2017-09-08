@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// SignResponse 签名的返回结构
 type SignResponse struct {
 	SourceStr string `json:"ostr"`
 	Sign      string `json:"sign"`
@@ -16,9 +17,9 @@ type SignResponse struct {
 }
 
 const (
-	// 签名正在生成中
+	// SignGenerating 签名正在生成中
 	SignGenerating = "generating"
-	// 签名计算OK
+	// SignOK 签名计算OK
 	SignOK = "ok"
 )
 

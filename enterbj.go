@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// 默认的超时时间，单位为 ms
+// DefaultTimeOut 默认的超时时间，单位为 ms
 const DefaultTimeOut = 100
 
 var (
@@ -120,14 +120,12 @@ func (e *Client) CheckEnvGrade(userID, carID, licenseNo, carModel, carRegTime st
 	return repBody, nil
 }
 
-// TODO 获取cookie
-// LoadOtherDrivers 加载其他驾驶人信息
+// LoadOtherDrivers 加载其他驾驶人信息 TODO
 func (e *Client) LoadOtherDrivers() error {
 	return nil
 }
 
-// TODO 处理参数,sign需要解决，通过客户端处理
-// SubmitPaper 提交进京证申请
+// SubmitPaper 提交进京证申请 TODO
 func (e *Client) SubmitPaper(userID, licenseNo, engineNo, carTypeCode string) (*response.SubmitPaper, error) {
 	req := applySubmitRequest(userID, licenseNo, engineNo, carTypeCode)
 	if req == nil {
