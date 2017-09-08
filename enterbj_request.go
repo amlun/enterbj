@@ -14,18 +14,19 @@ func (e *Client) verifyRequest(phone string) *request.Verification {
 
 func (e *Client) loginRequest(phone string, valicode string) *request.Login {
 	var reqBody request.Login
-	reqBody.DeviceType = ""
+	reqBody.DeviceType = "0"
 	reqBody.Lon = 116.542162
 	reqBody.Phone = phone
 	reqBody.Timestamp = time.Now().Format("2006-01-01 00:00:00")
 	reqBody.Source = "0"
 	reqBody.Lat = 39.937293
-	reqBody.Token = "922C90208F834084AF118EE49D6F522F"
-	reqBody.DeviceId = ""
-	reqBody.AppKey = ""
+	reqBody.Token = ""
+	reqBody.Platform = "01"
+	reqBody.DeviceId = "dbf55511b74c4380c460faf3cc1f3bb7f51fec56"
+	reqBody.CityCode = "1101"
+	reqBody.AppKey = "0791682354"
 	reqBody.ValiCode = valicode
 	reqBody.VerType = "1"
-	reqBody.Method = "login"
 	return &reqBody
 }
 
@@ -47,6 +48,12 @@ func (e *Client) carListRequest(userId string) *request.CarList {
 	reqBody.Token = "922C90208F834084AF118EE49D6F522F"
 	reqBody.UserId = userId
 	reqBody.Platform = "02"
+	// 处理Sign
+	if sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2, e.Conf.SignUrl); err != nil {
+		return nil
+	} else {
+		reqBody.Sign = sign
+	}
 	return &reqBody
 }
 
@@ -65,7 +72,9 @@ func (e *Client) checkEnvGradeRequest(userId, carId, licenseNo, carModel, carReg
 func (e *Client) applySubmitRequest(userId, licenseNo, engineNo, carTypeCode string) *request.SubmitPaper {
 	var reqBody request.SubmitPaper
 	reqBody.AppSource = "bjjj"
-	reqBody.HiddenTime = time.Now().Format("2006-01-02 15:04:05")
+	now := time.Now().Format("2006-01-02 15:04:05")
+	reqBody.Timestamp = now
+	reqBody.HiddenTime = now
 	reqBody.InbjEntranceCode1 = 05
 	reqBody.InbjEntranceCode = 12
 	reqBody.InbjDuration = 7
@@ -75,6 +84,11 @@ func (e *Client) applySubmitRequest(userId, licenseNo, engineNo, carTypeCode str
 	reqBody.EngineNo = engineNo
 	reqBody.CarTypeCode = carTypeCode
 	reqBody.VehicleType = "11"
-
+	// 处理Sign
+	if sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2, e.Conf.SignUrl); err != nil {
+		return nil
+	} else {
+		reqBody.Sign = sign
+	}
 	return &reqBody
 }

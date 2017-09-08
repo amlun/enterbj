@@ -8,13 +8,13 @@ import (
 	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
-	"fmt"
 	"time"
+	"errors"
 )
 
 const (
 	CARLIST_URL         = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/entercarlist"
-	LOGIN_URL           = "https://api.accident.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/login"
+	LOGIN_URL           = "https://bjjj.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/login"
 	SUBMIT_PAPER_URL    = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/submitpaper"
 	PERSON_INFO_URL     = "https://api.accident.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/getpersonalinfor?"
 	CHECK_ENV_GRADE_URL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/checkenvgrade"
@@ -24,7 +24,6 @@ const (
 var httpClient *http.Client
 
 func init() {
-	log.SetLevel(log.DebugLevel)
 	httpClient = &http.Client{Timeout: 1 * time.Second}
 }
 
@@ -34,6 +33,9 @@ type Client struct {
 
 func (e *Client) Verify(phone string) (*response.Verify, error) {
 	reqBody := e.verifyRequest(phone)
+	if reqBody == nil {
+		return nil, errors.New("generate verify request with error")
+	}
 	r, err := json.Marshal(reqBody)
 	if err != nil {
 		log.Error(err)
@@ -46,6 +48,9 @@ func (e *Client) Verify(phone string) (*response.Verify, error) {
 
 func (e *Client) Login(phone string, valicode string) (*response.Login, error) {
 	reqBody := e.loginRequest(phone, valicode)
+	if reqBody == nil {
+		return nil, errors.New("generate login request with error")
+	}
 	r, err := json.Marshal(reqBody)
 	if err != nil {
 		log.Error(err)
@@ -77,6 +82,9 @@ func (e *Client) Login(phone string, valicode string) (*response.Login, error) {
 
 func (e *Client) GetPersonInfo(userId string) (*response.PersonInfo, error) {
 	reqBody := e.personInfoRequest(userId)
+	if reqBody == nil {
+		return nil, errors.New("generate person info request with error")
+	}
 	r, err := query.Values(reqBody)
 	if err != nil {
 		log.Error(err)
@@ -109,18 +117,14 @@ func (e *Client) GetPersonInfo(userId string) (*response.PersonInfo, error) {
 
 func (e *Client) CarList(userId string) (*response.CarList, error) {
 	reqBody := e.carListRequest(userId)
+	if reqBody == nil {
+		return nil, errors.New("generate car list request with error")
+	}
 	r, err := query.Values(reqBody)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
-	// 处理Sign
-	sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2, e.Conf.SignUrl)
-	if err != nil {
-		log.Error(err)
-		return nil, err
-	}
-	r.Add("sign", sign)
 	log.Debugf("car list request body is [%s]", r.Encode())
 	req, _ := http.NewRequest("POST", CARLIST_URL, bytes.NewBufferString(r.Encode()))
 	req.Header = commonHeader
@@ -147,6 +151,9 @@ func (e *Client) CarList(userId string) (*response.CarList, error) {
 
 func (e *Client) CheckEnvGrade(userId, carId, licenseNo, carModel, carRegTime string) (*response.CheckEnvGrade, error) {
 	reqBody := e.checkEnvGradeRequest(userId, carId, licenseNo, carModel, carRegTime)
+	if reqBody == nil {
+		return nil, errors.New("generate check env grade request with error")
+	}
 	r, err := query.Values(reqBody)
 	if err != nil {
 		log.Error(err)
@@ -184,19 +191,15 @@ func (e *Client) LoadOtherDrivers() error {
 // TODO 处理参数,sign需要解决，通过客户端处理
 func (e *Client) SubmitPaper(userId, licenseNo, engineNo, carTypeCode string) (*response.SubmitPaper, error) {
 	reqBody := e.applySubmitRequest(userId, licenseNo, engineNo, carTypeCode)
-	fmt.Println(reqBody)
+	if reqBody == nil {
+		return nil, errors.New("generate submit paper request with error")
+	}
 	r, err := query.Values(reqBody)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 	// 处理Sign
-	sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2, e.Conf.SignUrl)
-	if err != nil {
-		log.Error(err)
-		return nil, err
-	}
-	r.Add("sign", sign)
 	log.Debugf("submit paper request body is [%s]", r.Encode())
 	req, _ := http.NewRequest("POST", SUBMIT_PAPER_URL, bytes.NewBufferString(r.Encode()))
 	req.Header = commonHeader

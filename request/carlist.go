@@ -8,4 +8,5 @@ type CarList struct {
 	Token     string `url:"token"`
 	AppSource string `url:"appsource"`
 	Platform  string `url:"platform"`
+	Sign      string `url:"sign"`
 }

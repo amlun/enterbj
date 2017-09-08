@@ -13,5 +13,6 @@ type Login struct {
 	AppKey     string  `json:"appkey"`
 	ValiCode   string  `json:"valicode"`
 	VerType    string  `json:"vertype"`
-	Method     string  `json:"method"`
+	Platform   string  `json:"platform"`
+	CityCode   string  `json:"citycode"`
 }
