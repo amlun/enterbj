@@ -10,11 +10,23 @@
 
 ## 使用说明
 
-目前SIGN处于测试中，还不对外开放
+### 准备
+
+安装 [Glide](https://glide.sh/)
+
+```bash
+mkdir -p $GOPATH/src/github.com/amlun
+git clone https://github.com/amlun/enterbj $GOPATH/src/github.com/amlun
+cd $GOPATH/src/github.com/amlun/enterbj
+glide install
+cd example
+cp config.ini.example config.ini
+```
 
 ### 配置
 
-config.ini
+**目前SIGN处于测试中，还不对外开放**
+修改config.ini文件的signUrl，（如果你可以找到的话😊）
 
 ```ini
 [test]
@@ -31,12 +43,11 @@ timeOut = 2000
 ### 运行
 
 ```bash
-go run bin/main.go config.ini
+go run main.go config.ini
 ```
 或者
 ```bash
-go build -o enterbj bin/main.go
-
+make build
 ./enterbj config.ini
 ```
 
