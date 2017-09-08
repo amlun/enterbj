@@ -24,6 +24,7 @@ userId = ABCDEFGHIJKLMNOPQRSTUVWXYZ
 appKey = kkk
 appSource = bjjj
 signUrl = http://127.0.0.1:8080/gensign/%s%s
+timeOut = 2000
 
 ```
 
