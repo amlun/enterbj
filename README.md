@@ -89,4 +89,8 @@ WARN[0002] 该车辆 冀A88888 当前可以申请，请立即申请！
 ## 其它
 
 [讨论](https://github.com/amlun/enterbj/issues)
+
 [群聊](https://t.me/joinchat/F9pB0w5VRUE3TC-pB5w_NQ)
+
+[公告](https://t.me/enterbj)
+
