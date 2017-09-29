@@ -31,9 +31,9 @@ cp config.ini.example config.ini
 
 **目前SIGN处于测试中，还不对外开放**
 
-修改userId为你自己的userId（别问我怎么拿到。。。。😼）
+修改userId为你自己的userId 😼
 
-修改config.ini文件的signUrl，（如果你可以找到的话😊）
+修改config.ini文件的signUrl 😊
 
 ```ini
 [test]
@@ -79,6 +79,7 @@ WARN[0002] 该车辆 冀A88888 当前可以申请，请立即申请！
 - [x] 获取用户信息
 - [x] 获取车辆列表
 - [x] 获取车辆环保信息
+- [x] 服务可用状态
 - [ ] 登录
 - [ ] 验证码
 - [ ] 获取其他驾驶人员列表
