@@ -2,9 +2,11 @@ package enterbj
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"github.com/amlun/enterbj/request"
 	"github.com/google/go-querystring/query"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -26,6 +28,7 @@ const (
 	// CheckEnvGradeURL 检查环保信息
 	CheckEnvGradeURL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/checkenvgrade"
 	//LoadOtherDriversUrl = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers"
+	CheckServiceStatusURL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/curtime_03"
 )
 
 var commonHeader = http.Header{
@@ -133,7 +136,8 @@ func checkEnvGradeRequest(userID, carID, licenseNo, carModel, carRegTime string)
 }
 
 // TODO
-func applySubmitRequest(userID, licenseNo, engineNo, carTypeCode string) *http.Request {
+func applySubmitRequest(userID, licenseNo, engineNo, drivingPhotoPath, carPhotoPath, driverName, driverLicenseNo,
+	driverPhotoPath, personPhotoPath, carID, carModel, carRegTime, envGrade string) *http.Request {
 	var reqBody request.SubmitPaper
 	reqBody.AppSource = "bjjj"
 	now := time.Now().Format(SimpleDateTime)
@@ -143,10 +147,21 @@ func applySubmitRequest(userID, licenseNo, engineNo, carTypeCode string) *http.R
 	reqBody.InbjEntranceCode = 12
 	reqBody.InbjDuration = 7
 	reqBody.InbjTime = time.Now().AddDate(0, 0, 1).Format(SimpleDate)
-	reqBody.UserId = userID
-	reqBody.LicenseNo = licenseNo
-	reqBody.EngineNo = engineNo
-	reqBody.CarTypeCode = carTypeCode
+	reqBody.CarTypeCode = "02"
+	reqBody.VehicleType = "11"
+	reqBody.UserId = userID                                  // 用户ID
+	reqBody.LicenseNo = licenseNo                            // 车牌号
+	reqBody.EngineNo = engineNo                              // 发动机编号
+	reqBody.DrivingPhoto = readBase64Image(drivingPhotoPath) // 获取车辆行驶证 base64
+	reqBody.CarPhoto = readBase64Image(carPhotoPath)         // 获取车辆正面照 base64
+	reqBody.DriverName = driverName                          // 驾驶人姓名
+	reqBody.DriverLicenseNo = driverLicenseNo                // 驾照编码
+	reqBody.DriverPhoto = readBase64Image(driverPhotoPath)   // 驾驶人证件 base64
+	reqBody.PersonPhoto = readBase64Image(personPhotoPath)   // 驾驶人手持身份证 base64
+	reqBody.CarId = carID                                    // 车辆注册编号
+	reqBody.CarModel = carModel                              // 车辆型号
+	reqBody.CarRegTime = carRegTime                          // 车辆注册时间
+	reqBody.EnvGrade = envGrade                              // 环保标准
 	reqBody.VehicleType = "11"
 	sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2)
 	if err != nil { // 处理Sign
@@ -164,13 +179,31 @@ func applySubmitRequest(userID, licenseNo, engineNo, carTypeCode string) *http.R
 	return req
 }
 
-func sendRequest(req *http.Request, v interface{}) (resp *http.Response, err error) {
-	resp, err = httpClient.Do(req)
+func checkServiceStatus() *http.Request {
+	req, _ := http.NewRequest("POST", CheckServiceStatusURL, bytes.NewBufferString(""))
+	req.Header = commonHeader
+	return req
+}
+
+func readBase64Image(fpath string) string {
+	buf, err := ioutil.ReadFile(fpath)
 	if err != nil {
+		return ""
+	}
+	return base64.StdEncoding.EncodeToString(buf)
+}
+
+func sendRequest(req *http.Request, v interface{}) (resp *http.Response, err error) {
+	logrus.Debugf("send request (%v)", req)
+	resp, err = httpClient.Do(req)
+	logrus.Debugf("receive response (%v)", resp)
+	if err != nil {
+		logrus.Errorf("send request error (%v)", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
+	logrus.Debugf("receive response body (%s)", body)
 	if err != nil {
 		return nil, err
 	}

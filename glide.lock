@@ -1,26 +1,14 @@
-hash: 2e4d07d5bc537a9072ec7c84df6ea4601fbed89d5bd2110674e7b7bf6c23faad
-updated: 2017-09-08T15:30:32.007291788+08:00
+hash: 003954bb9910bcea66eb93762265440ceaa0ba879451fa4d3241834664974da3
+updated: 2017-09-11T17:05:16.772112237+08:00
 imports:
 - name: github.com/google/go-querystring
   version: 53e6ce116135b80d037921a7fdd5138cf32d7a8a
   subpackages:
   - query
-- name: github.com/moul/http2curl
-  version: 4e24498b31dba4683efb9d35c1c8a91e2eda28c8
-- name: github.com/parnurzeal/gorequest
-  version: a578a48e8d6ca8b01a3b18314c43c6716bb5f5a3
-- name: github.com/pkg/errors
-  version: c605e284fe17294bda444b34710735b29d1a9d90
-- name: github.com/robfig/cron
-  version: 736158dc09e10f1911ca3a1e1b01f11b566ce5db
 - name: github.com/sirupsen/logrus
   version: 5e5dc898656f695e2a086b8e12559febbfc01562
-- name: golang.org/x/net
-  version: 66aacef3dd8a676686c7ae3716979581e8b03c47
-  subpackages:
-  - publicsuffix
 - name: golang.org/x/sys
-  version: a45f55524b7ec57890cfa6c6bc06b47f877be0d1
+  version: a5054c7c1385fd50d9394475365355a87a7873ec
   subpackages:
   - unix
 - name: gopkg.in/gcfg.v1

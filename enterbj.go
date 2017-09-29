@@ -19,7 +19,12 @@ var (
 	conf        *Config
 	httpClient  *http.Client
 	mutex       sync.Mutex
+	errRequest  = errors.New("generate request error")
 )
+
+func noRedirect(req *http.Request, via []*http.Request) error {
+	return errors.New("Don't redirect!")
+}
 
 // Client 进京证办理客户端
 type Client struct {
@@ -39,7 +44,8 @@ func New(config *Config) *Client {
 	}
 	// http client
 	httpClient = &http.Client{
-		Timeout: config.Timeout * time.Millisecond,
+		Timeout:       config.Timeout * time.Millisecond,
+		CheckRedirect: noRedirect,
 	}
 	// config
 	conf = config
@@ -53,7 +59,7 @@ func New(config *Config) *Client {
 func (e *Client) Verify(phone string) (*response.Verify, error) {
 	reqBody := verifyRequest(phone)
 	if reqBody == nil {
-		return nil, errors.New("generate verify request with error")
+		return nil, errRequest
 	}
 	r, err := json.Marshal(reqBody)
 	if err != nil {
@@ -69,7 +75,7 @@ func (e *Client) Verify(phone string) (*response.Verify, error) {
 func (e *Client) Login(phone string, valicode string) (*response.Login, error) {
 	req := loginRequest(phone, valicode)
 	if req == nil {
-		return nil, errors.New("generate login request with error")
+		return nil, errRequest
 	}
 	var repBody *response.Login
 	if _, err := sendRequest(req, &repBody); err != nil {
@@ -82,7 +88,7 @@ func (e *Client) Login(phone string, valicode string) (*response.Login, error) {
 func (e *Client) GetPersonInfo(userID string) (*response.PersonInfo, error) {
 	req := personInfoRequest(userID)
 	if req == nil {
-		return nil, errors.New("generate person info request with error")
+		return nil, errRequest
 	}
 	var repBody *response.PersonInfo
 	if _, err := sendRequest(req, &repBody); err != nil {
@@ -95,7 +101,7 @@ func (e *Client) GetPersonInfo(userID string) (*response.PersonInfo, error) {
 func (e *Client) CarList(userID string) (*response.CarList, error) {
 	req := carListRequest(userID)
 	if req == nil {
-		return nil, errors.New("generate car list request with error")
+		return nil, errRequest
 	}
 
 	var repBody *response.CarList
@@ -110,7 +116,7 @@ func (e *Client) CarList(userID string) (*response.CarList, error) {
 func (e *Client) CheckEnvGrade(userID, carID, licenseNo, carModel, carRegTime string) (*response.CheckEnvGrade, error) {
 	req := checkEnvGradeRequest(userID, carID, licenseNo, carModel, carRegTime)
 	if req == nil {
-		return nil, errors.New("generate check env grade request with error")
+		return nil, errRequest
 	}
 
 	var repBody *response.CheckEnvGrade
@@ -126,10 +132,12 @@ func (e *Client) LoadOtherDrivers() error {
 }
 
 // SubmitPaper 提交进京证申请 TODO
-func (e *Client) SubmitPaper(userID, licenseNo, engineNo, carTypeCode string) (*response.SubmitPaper, error) {
-	req := applySubmitRequest(userID, licenseNo, engineNo, carTypeCode)
+func (e *Client) SubmitPaper(userID, licenseNo, engineNo, drivingPhotoPath, carPhotoPath, driverName, driverLicenseNo,
+	driverPhotoPath, personPhotoPath, carID, carModel, carRegTime, envGrade string) (*response.SubmitPaper, error) {
+	req := applySubmitRequest(userID, licenseNo, engineNo, drivingPhotoPath, carPhotoPath, driverName, driverLicenseNo,
+		driverPhotoPath, personPhotoPath, carID, carModel, carRegTime, envGrade)
 	if req == nil {
-		return nil, errors.New("generate submit paper request with error")
+		return nil, errRequest
 	}
 
 	var repBody *response.SubmitPaper
@@ -137,4 +145,19 @@ func (e *Client) SubmitPaper(userID, licenseNo, engineNo, carTypeCode string) (*
 		return nil, err
 	}
 	return repBody, nil
+}
+
+func (e *Client) CheckServiceStatus() error {
+	req := checkServiceStatus()
+	if req == nil {
+		return errRequest
+	}
+	var v interface{}
+	if resp, err := sendRequest(req, &v); err != nil {
+		return err
+	} else {
+		log.Debugf("CheckServiceStatus response body is [%s]", resp)
+	}
+
+	return nil
 }

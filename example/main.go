@@ -42,12 +42,20 @@ func main() {
 		return
 	}
 	eClient = enterbj.New(&conf.EnterBj)
-	checkCar()
+	checkStatus()
 
 	// TODO
 	//c := cron.New()
 	//c.AddFunc("@daily", checkCar)
 	//c.Run()
+}
+
+func checkStatus() {
+	if err := eClient.CheckServiceStatus(); err != nil {
+		log.Error("当前服务不可用")
+	} else {
+		log.Info("当前服务可用，请尽快处理")
+	}
 }
 
 // TODO
@@ -60,9 +68,19 @@ func checkCar() {
 			if car.ApplyFlag == "1" {
 				// TODO send notice
 				log.Warnf("该车辆 %s 当前可以申请，请立即申请！", car.LicenseNo)
+				//eClient.SubmitPaper(conf.Test.UserId, car.LicenseNo, car.)
 			} else {
+				var format string
 				for _, apply := range car.CarApplyArr {
-					log.Infof("车辆 %s 已经申请到进京证，时间为 %s 到 %s", apply.LicenseNo, apply.EnterBjStart, apply.EnterBjEnd)
+					switch apply.Status {
+					case "1":
+						format = "车辆 %s 申请成功，时间为 %s 到 %s"
+					case "2":
+						format = "车辆 %s 正在审核，时间为 %s 到 %s"
+					default:
+						format = "车辆 %s 审核失败，时间为 %s 到 %s"
+					}
+					log.Infof(format, apply.LicenseNo, apply.EnterBjStart, apply.EnterBjEnd)
 				}
 			}
 		}

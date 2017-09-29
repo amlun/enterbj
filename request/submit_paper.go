@@ -19,9 +19,9 @@ type SubmitPaper struct {
 	DrivingPhoto      string `url:"drivingphoto"`      // 车辆行驶证 base64(照片）
 	CarPhoto          string `url:"carphoto"`          // 车辆正面照 base64(照片）
 	DriverName        string `url:"drivername"`        // 驾驶人姓名
-	DriverLicenseno   string `url:"driverlicenseno"`   // 驾驶人驾照编号(身份证号)
+	DriverLicenseNo   string `url:"driverlicenseno"`   // 驾驶人驾照编号(身份证号)
 	DriverPhoto       string `url:"driverphoto"`       // 驾驶人证件 base64(照片）
-	Personphoto       string `url:"personphoto"`       // 驾驶员手持身份证 base64(照片）
+	PersonPhoto       string `url:"personphoto"`       // 驾驶员手持身份证 base64(照片）
 	GpsLon            string `url:"gpslon"`            // 地理位置信息
 	GpsLat            string `url:"gpslat"`            // 地理位置信息
 	PhoneNo           string `url:"phoneno"`           // 留空
