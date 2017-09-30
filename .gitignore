@@ -17,3 +17,4 @@
 vendor/
 config.ini
 test_data.go
+enterbj-*
