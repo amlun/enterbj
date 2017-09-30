@@ -77,7 +77,7 @@ func InitConfig(confPath string) (*Config, error) {
 }
 
 func main() {
-	logrus.Info("begin ...")
+	logrus.Info("start ...")
 	// 必须指定配置文件
 	if len(os.Args) < 2 {
 		logrus.Error("You must specify a config file")
@@ -98,7 +98,6 @@ func main() {
 	// 邮箱客户端初始化配置
 	eMail.From = fmt.Sprintf("Enterbj Notice <%s>", conf.Mail.UserName)
 	eMail.To = []string{conf.Test.Email}
-	checkServiceStatus()
 	// 定时任务
 	c := cron.New()
 	c.AddFunc(conf.Test.CarPeriod, checkCar)
