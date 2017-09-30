@@ -27,16 +27,19 @@ var (
 	lastCheck   = LastCheck{}
 )
 
-type LastCheck struct {
-	Online   bool
-	lastTime int64
-}
-
+// 进京证用户配置
 type Test struct {
 	UserId string
 	Email  string
 }
 
+// 保存上一次检查状态
+type LastCheck struct {
+	Online   bool
+	lastTime int64
+}
+
+// 邮箱配置
 type MailConfig struct {
 	UserName string
 	PassWord string
@@ -44,12 +47,14 @@ type MailConfig struct {
 	SmtpPort string
 }
 
+// 全局配置，对应ini文件
 type Config struct {
 	EnterBj enterbj.Config
 	Test    Test
 	Mail    MailConfig
 }
 
+// 初始化配置信息
 func InitConfig(confPath string) (*Config, error) {
 	if conf != nil {
 		return conf, nil
@@ -78,7 +83,7 @@ func main() {
 	quit := signals()
 	// 初始化enterbj客户端
 	eClient = enterbj.New(&conf.EnterBj)
-	// smtp服务起认证
+	// smtp服务器认证
 	smtpAuth = smtp.PlainAuth("", conf.Mail.UserName, conf.Mail.PassWord, conf.Mail.SmtpHost)
 	// 邮箱客户端初始化配置
 	eMail.From = fmt.Sprintf("Enterbj Notice <%s>", conf.Mail.UserName)
@@ -98,6 +103,7 @@ func main() {
 	logrus.Info("quit ...")
 }
 
+// 发送邮件
 func sendMail(subject, text string) {
 	mailMutex.Lock()
 	defer mailMutex.Unlock()
@@ -110,6 +116,7 @@ func sendMail(subject, text string) {
 	}
 }
 
+// 检查服务状态
 func checkServiceStatus() {
 	statusMutxt.Lock()
 	defer statusMutxt.Unlock()
@@ -136,7 +143,7 @@ func checkServiceStatus() {
 }
 
 // TODO
-// 每天运行一次，检查是否过期
+// 每天运行一次，检查车辆进京证是否过期
 func checkCar() {
 	checkMutex.Lock()
 	defer checkMutex.Unlock()
