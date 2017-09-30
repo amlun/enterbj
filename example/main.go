@@ -29,8 +29,10 @@ var (
 
 // 进京证用户配置
 type Test struct {
-	UserId string
-	Email  string
+	UserId        string
+	Email         string
+	ServicePeriod string // 服务检查
+	CarPeriod     string // 车辆检查
 }
 
 // 保存上一次检查状态
@@ -63,6 +65,14 @@ func InitConfig(confPath string) (*Config, error) {
 	if err := gcfg.ReadFileInto(conf, confPath); err != nil {
 		return nil, err
 	}
+
+	if conf.Test.CarPeriod == "" {
+		conf.Test.CarPeriod = "@daily"
+	}
+
+	if conf.Test.ServicePeriod == "" {
+		conf.Test.ServicePeriod = "@hourly"
+	}
 	return conf, nil
 }
 
@@ -91,8 +101,8 @@ func main() {
 	checkServiceStatus()
 	// 定时任务
 	c := cron.New()
-	c.AddFunc("@daily", checkCar)
-	c.AddFunc("@hourly", checkServiceStatus)
+	c.AddFunc(conf.Test.CarPeriod, checkCar)
+	c.AddFunc(conf.Test.ServicePeriod, checkServiceStatus)
 	logrus.Info("cron start ...")
 	c.Start()
 	defer func() {
@@ -121,19 +131,14 @@ func checkServiceStatus() {
 	statusMutxt.Lock()
 	defer statusMutxt.Unlock()
 
-	// 不需要检查
-	if !check {
-		return
-	}
-
 	if err := eClient.CheckServiceStatus(); err != nil {
-		if lastCheck.Online || lastCheck.lastTime == 0 {
+		if (lastCheck.Online || lastCheck.lastTime == 0) && check {
 			sendMail("进京证办理服务检查", "当前服务不可用")
 		}
 		lastCheck.Online = false
 		logrus.Error("当前服务不可用")
 	} else {
-		if !lastCheck.Online || lastCheck.lastTime == 0 {
+		if (!lastCheck.Online || lastCheck.lastTime == 0) && check {
 			sendMail("进京证办理服务检查", "当前服务可用，请尽快处理")
 		}
 		lastCheck.Online = true
