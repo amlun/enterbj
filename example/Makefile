@@ -17,6 +17,8 @@ help:
 	@echo "    windows: build the windows binary"
 	@echo "    clean  : clean binary"
 
+all: linux darwin windows
+
 build:
 	@go build ${LDFLAGS} -o ${BINARY}
 
