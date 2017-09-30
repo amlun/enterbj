@@ -3,3 +3,7 @@ import:
 - package: github.com/google/go-querystring
 - package: github.com/sirupsen/logrus
 - package: gopkg.in/gcfg.v1
+- package: github.com/jordan-wright/email
+  version: v2.2
+- package: github.com/robfig/cron
+  version: v1

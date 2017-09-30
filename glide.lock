@@ -1,14 +1,18 @@
-hash: 003954bb9910bcea66eb93762265440ceaa0ba879451fa4d3241834664974da3
-updated: 2017-09-11T17:05:16.772112237+08:00
+hash: 63dd98a13dc81aa131f18cecd41921f99d42548389e15d83562f3e32e4956fec
+updated: 2017-09-30T14:09:26.835701697+08:00
 imports:
 - name: github.com/google/go-querystring
   version: 53e6ce116135b80d037921a7fdd5138cf32d7a8a
   subpackages:
   - query
+- name: github.com/jordan-wright/email
+  version: a62870b0c368c3c29de27027be67d855e308cc37
+- name: github.com/robfig/cron
+  version: b024fc5ea0e34bc3f83d9941c8d60b0622bfaca4
 - name: github.com/sirupsen/logrus
   version: 5e5dc898656f695e2a086b8e12559febbfc01562
 - name: golang.org/x/sys
-  version: a5054c7c1385fd50d9394475365355a87a7873ec
+  version: 314a259e304ff91bd6985da2a7149bbf91237993
   subpackages:
   - unix
 - name: gopkg.in/gcfg.v1
