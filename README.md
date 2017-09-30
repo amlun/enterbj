@@ -33,17 +33,28 @@ cp config.ini.example config.ini
 
 修改userId为你自己的userId 😼
 
-修改config.ini文件的signUrl 😊
+配置你要接收信息的邮箱地址 email 📮
+
+然后配置邮件服务 [mail]
+
+修改signUrl 😊
 
 ```ini
 [test]
 userId = ABCDEFGHIJKLMNOPQRSTUVWXYZ
+email  = user@example.com
 
 [enterbj]
 appKey = kkk
 appSource = bjjj
 signUrl = http://127.0.0.1:8080/gensign/%s%s
 timeOut = 2000
+
+[mail]
+userName = user@example.com
+passWord = password
+smtpHost = smtp.example.com
+smtpPort = 25
 
 ```
 
