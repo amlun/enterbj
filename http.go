@@ -22,7 +22,7 @@ const (
 	// LoginURL 登录
 	LoginURL = "https://bjjj.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/login"
 	// SubmitPaperURL 提交进京证申请
-	SubmitPaperURL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/submitpaper"
+	SubmitPaperURL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj-img/platform/enterbj/submitpaper_03"
 	// PersonInfoURL 个人信息
 	PersonInfoURL = "https://api.accident.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/getpersonalinfor?"
 	// CheckEnvGradeURL 检查环保信息
@@ -68,6 +68,7 @@ func loginRequest(phone string, valicode string) *http.Request {
 
 	r, err := json.Marshal(reqBody)
 	if err != nil {
+		logrus.Error(err)
 		return nil
 	}
 	req, _ := http.NewRequest("POST", LoginURL, bytes.NewBuffer(r))
@@ -84,6 +85,7 @@ func personInfoRequest(userID string) *http.Request {
 
 	r, err := query.Values(reqBody)
 	if err != nil {
+		logrus.Error(err)
 		return nil
 	}
 	req, _ := http.NewRequest("GET", PersonInfoURL+r.Encode(), nil)
@@ -103,12 +105,14 @@ func carListRequest(userID string) *http.Request {
 	reqBody.Platform = "02"
 	sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2)
 	if err != nil { // 处理Sign
+		logrus.Error(err)
 		return nil
 	}
 	reqBody.Sign = sign
 
 	r, err := query.Values(reqBody)
 	if err != nil {
+		logrus.Error(err)
 		return nil
 	}
 	req, _ := http.NewRequest("POST", CarListURL, bytes.NewBufferString(r.Encode()))
@@ -127,6 +131,7 @@ func checkEnvGradeRequest(userID, carID, licenseNo, carModel, carRegTime string)
 
 	r, err := query.Values(reqBody)
 	if err != nil {
+		logrus.Error(err)
 		return nil
 	}
 	req, _ := http.NewRequest("POST", CheckEnvGradeURL, bytes.NewBufferString(r.Encode()))
@@ -148,7 +153,7 @@ func applySubmitRequest(userID, licenseNo, engineNo, drivingPhotoPath, carPhotoP
 	reqBody.InbjDuration = 7
 	reqBody.InbjTime = time.Now().AddDate(0, 0, 1).Format(SimpleDate)
 	reqBody.CarTypeCode = "02"
-	reqBody.VehicleType = "11"
+	reqBody.VehicleType = "03"
 	reqBody.UserId = userID                                  // 用户ID
 	reqBody.LicenseNo = licenseNo                            // 车牌号
 	reqBody.EngineNo = engineNo                              // 发动机编号
@@ -165,6 +170,7 @@ func applySubmitRequest(userID, licenseNo, engineNo, drivingPhotoPath, carPhotoP
 	reqBody.VehicleType = "11"
 	sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2)
 	if err != nil { // 处理Sign
+		logrus.Error(err)
 		return nil
 	}
 	reqBody.Sign = sign
@@ -205,10 +211,12 @@ func sendRequest(req *http.Request, v interface{}) (resp *http.Response, err err
 	body, err := ioutil.ReadAll(resp.Body)
 	logrus.Debugf("receive response body (%s)", body)
 	if err != nil {
+		logrus.Error(err)
 		return nil, err
 	}
 	err = json.Unmarshal(body, &v)
 	if err != nil {
+		logrus.Error(err)
 		return nil, err
 	}
 	return resp, nil
