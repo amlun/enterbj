@@ -1,10 +1,10 @@
-BINARY=enterbj
+BINARY = enterbj
 GOARCH = amd64
 
-VERSION=0.0.1
-BUILD=`date +%FT%T%z`
+VERSION= 0.1.0
+BUILD  = `date +%FT%T%z`
 
-LDFLAGS=-ldflags "-X main.Version=${VERSION} -X main.Build=${BUILD}"
+LDFLAGS= -ldflags "-X main.Version=${VERSION} -X main.Build=${BUILD}"
 
 .PHONY: help build linux darwin windows clean
 

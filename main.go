@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/amlun/enterbj"
+	"github.com/amlun/enterbj/core"
 	"github.com/jordan-wright/email"
 	"github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
@@ -17,7 +17,7 @@ import (
 
 var (
 	conf        *Config
-	eClient     *enterbj.Client
+	eClient     *core.Client
 	smtpAuth    smtp.Auth
 	mailMutex   sync.Mutex
 	statusMutxt sync.Mutex
@@ -51,7 +51,7 @@ type MailConfig struct {
 
 // 全局配置，对应ini文件
 type Config struct {
-	EnterBj enterbj.Config
+	EnterBj core.Config
 	Test    Test
 	Mail    MailConfig
 }
@@ -92,7 +92,7 @@ func main() {
 	// 监听信号
 	quit := signals()
 	// 初始化enterbj客户端
-	eClient = enterbj.New(&conf.EnterBj)
+	eClient = core.New(&conf.EnterBj)
 	// smtp服务器认证
 	smtpAuth = smtp.PlainAuth("", conf.Mail.UserName, conf.Mail.PassWord, conf.Mail.SmtpHost)
 	// 邮箱客户端初始化配置

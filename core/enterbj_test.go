@@ -1,10 +1,11 @@
-package enterbj
+package core
 
 import (
 	"testing"
 )
 
 func TestClient_CarList(t *testing.T) {
+	setUpTest()
 	if r, err := ob.CarList(userID); err != nil {
 		t.Error(err)
 	} else {
@@ -13,6 +14,7 @@ func TestClient_CarList(t *testing.T) {
 }
 
 func TestClient_Login(t *testing.T) {
+	setUpTest()
 	if r, err := ob.Login(phone, code); err != nil {
 		t.Error(err)
 	} else {
@@ -21,6 +23,7 @@ func TestClient_Login(t *testing.T) {
 }
 
 func TestClient_GetPersonInfo(t *testing.T) {
+	setUpTest()
 	if r, err := ob.GetPersonInfo(userID); err != nil {
 		t.Error(err)
 	} else {
@@ -29,6 +32,7 @@ func TestClient_GetPersonInfo(t *testing.T) {
 }
 
 func TestClient_CheckEnvGrade(t *testing.T) {
+	setUpTest()
 	if r, err := ob.CheckEnvGrade(userID, carID, licenseNo, carModel, carRegTime); err != nil {
 		t.Error(err)
 	} else {
@@ -37,6 +41,7 @@ func TestClient_CheckEnvGrade(t *testing.T) {
 }
 
 func TestClient_SubmitPaper(t *testing.T) {
+	setUpTest()
 	if r, err := ob.SubmitPaper(userID, licenseNo, engineNo, drivingPhotoPath, carPhotoPath, driverName, driverLicenseNo,
 		driverPhotoPath, personPhotoPath, carID, carModel, carRegTime, envGrade); err != nil {
 		t.Error(err)
@@ -46,6 +51,7 @@ func TestClient_SubmitPaper(t *testing.T) {
 }
 
 func TestClient_CheckServiceStatus(t *testing.T) {
+	setUpTest()
 	if err := ob.CheckServiceStatus(); err != nil {
 		t.Error(err)
 	} else {

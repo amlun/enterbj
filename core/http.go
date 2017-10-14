@@ -1,4 +1,4 @@
-package enterbj
+package core
 
 import (
 	"bytes"
