@@ -153,7 +153,7 @@ func checkCar() {
 	defer checkMutex.Unlock()
 
 	if info, err := eClient.CarList(conf.Test.UserId); err != nil {
-		logrus.Error("Get car list error", err)
+		logrus.Errorf("Get car list error (%s)", err)
 	} else {
 		for _, car := range info.DataList {
 			if car.ApplyFlag == "1" {
