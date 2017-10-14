@@ -23,7 +23,6 @@ mkdir -p $GOPATH/src/github.com/amlun
 git clone https://github.com/amlun/enterbj $GOPATH/src/github.com/amlun/enterbj
 cd $GOPATH/src/github.com/amlun/enterbj
 glide install
-cd example
 cp config.ini.example config.ini
 ```
 
