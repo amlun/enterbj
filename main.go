@@ -20,7 +20,7 @@ var (
 	eClient     *core.Client
 	smtpAuth    smtp.Auth
 	mailMutex   sync.Mutex
-	statusMutxt sync.Mutex
+	statusMutex sync.Mutex
 	checkMutex  sync.Mutex
 	eMail       = email.NewEmail()
 	check       bool
@@ -127,8 +127,8 @@ func sendMail(subject, text string) {
 
 // 检查服务状态
 func checkServiceStatus() {
-	statusMutxt.Lock()
-	defer statusMutxt.Unlock()
+	statusMutex.Lock()
+	defer statusMutex.Unlock()
 
 	if err := eClient.CheckServiceStatus(); err != nil {
 		if (lastCheck.Online || lastCheck.lastTime == 0) && check {
@@ -137,7 +137,7 @@ func checkServiceStatus() {
 		lastCheck.Online = false
 		logrus.Error("当前服务不可用")
 	} else {
-		if (!lastCheck.Online || lastCheck.lastTime == 0) && check {
+		if check {
 			sendMail("进京证办理服务检查", "当前服务可用，请尽快处理")
 		}
 		lastCheck.Online = true
