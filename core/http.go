@@ -18,17 +18,17 @@ const (
 	// SimpleDateTime 简单的日期时间格式
 	SimpleDateTime = "2006-01-02 15:04:05"
 	// CarListURL 车辆列表
-	CarListURL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/entercarlist"
+	CarListURL = "https://enterbj.zhongchebaolian.com/enterbj/platform/enterbj/entercarlist"
 	// LoginURL 登录
 	LoginURL = "https://bjjj.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/login"
 	// SubmitPaperURL 提交进京证申请
-	SubmitPaperURL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj-img/platform/enterbj/submitpaper_03"
+	SubmitPaperURL = "https://enterbj.zhongchebaolian.com/enterbj-img/platform/enterbj/submitpaper_03"
 	// PersonInfoURL 个人信息
-	PersonInfoURL = "https://api.accident.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/getpersonalinfor?"
+	PersonInfoURL = "https://bjjj.zhongchebaolian.com/industryguild_mobile_standard_self2.1.2/mobile/standard/getpersonalinfor?"
 	// CheckEnvGradeURL 检查环保信息
-	CheckEnvGradeURL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/checkenvgrade"
+	CheckEnvGradeURL = "https://enterbj.zhongchebaolian.com/enterbj/platform/enterbj/checkenvgrade"
 	//LoadOtherDriversUrl = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers"
-	CheckServiceStatusURL = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/curtime_03"
+	CheckServiceStatusURL = "https://enterbj.zhongchebaolian.com/enterbj/platform/enterbj/curtime_03"
 )
 
 var commonHeader = http.Header{
@@ -167,7 +167,10 @@ func applySubmitRequest(userID, licenseNo, engineNo, drivingPhotoPath, carPhotoP
 	reqBody.CarModel = carModel                              // 车辆型号
 	reqBody.CarRegTime = carRegTime                          // 车辆注册时间
 	reqBody.EnvGrade = envGrade                              // 环保标准
-	reqBody.VehicleType = "11"
+	reqBody.VehicleType = "11"                               // 机动车类型
+	reqBody.PlatForm = "02"                                  // 平台，默认使用安卓平台
+	reqBody.ImageID = ""
+
 	sign, err := GetSign(reqBody.UserId, reqBody.Timestamp, 3, 2)
 	if err != nil { // 处理Sign
 		logrus.Error(err)

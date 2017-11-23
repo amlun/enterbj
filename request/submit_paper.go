@@ -33,6 +33,8 @@ type SubmitPaper struct {
 	EnvGrade          string `url:"envGrade"`          // 环保标准
 	Code              string `url:"code"`              // 留空
 	Sign              string `url:"sign"`              // 需要从客户端获取
+	ImageID           string `url:imageId`             // 图片ID InbjEntranceCode.InbjDuration.InbjTime.UserId.EngineNo.CarTypeCode.DriverLicenseNo.CarId.HiddenTime;
+	PlatForm          string `url:platform`            // 平台信息  01: iOS  02: Android
 }
 
 /*
