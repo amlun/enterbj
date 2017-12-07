@@ -147,8 +147,8 @@ func (e *Client) SubmitPaper(userID, licenseNo, engineNo, drivingPhotoPath, carP
 	return repBody, nil
 }
 
-func (e *Client) CheckServiceStatus() error {
-	req := checkServiceStatus()
+func (e *Client) CheckServiceStatus(userID string) error {
+	req := checkServiceStatus(userID)
 	if req == nil {
 		return errRequest
 	}

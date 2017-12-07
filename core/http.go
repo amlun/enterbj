@@ -28,7 +28,7 @@ const (
 	// CheckEnvGradeURL 检查环保信息
 	CheckEnvGradeURL = "https://enterbj.zhongchebaolian.com/enterbj/platform/enterbj/checkenvgrade"
 	//LoadOtherDriversUrl = "https://api.jinjingzheng.zhongchebaolian.com/enterbj/platform/enterbj/loadotherdrivers"
-	CheckServiceStatusURL = "https://enterbj.zhongchebaolian.com/enterbj/platform/enterbj/curtime_03"
+	CheckServiceStatusURL = "https://enterbj.zhongchebaolian.com/enterbj/platform/enterbj/curtime_03?userid="
 )
 
 var commonHeader = http.Header{
@@ -188,8 +188,8 @@ func applySubmitRequest(userID, licenseNo, engineNo, drivingPhotoPath, carPhotoP
 	return req
 }
 
-func checkServiceStatus() *http.Request {
-	req, _ := http.NewRequest("POST", CheckServiceStatusURL, bytes.NewBufferString(""))
+func checkServiceStatus(userID string) *http.Request {
+	req, _ := http.NewRequest("POST", CheckServiceStatusURL+userID, bytes.NewBufferString(""))
 	req.Header = commonHeader
 	return req
 }

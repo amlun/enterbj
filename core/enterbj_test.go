@@ -52,7 +52,7 @@ func TestClient_SubmitPaper(t *testing.T) {
 
 func TestClient_CheckServiceStatus(t *testing.T) {
 	setUpTest()
-	if err := ob.CheckServiceStatus(); err != nil {
+	if err := ob.CheckServiceStatus(userID); err != nil {
 		t.Error(err)
 	} else {
 		t.Log("ok")

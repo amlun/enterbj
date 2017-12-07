@@ -130,7 +130,7 @@ func checkServiceStatus() {
 	statusMutex.Lock()
 	defer statusMutex.Unlock()
 
-	if err := eClient.CheckServiceStatus(); err != nil {
+	if err := eClient.CheckServiceStatus(conf.Test.UserId); err != nil {
 		if (lastCheck.Online || lastCheck.lastTime == 0) && check {
 			sendMail("进京证办理服务检查", "当前服务不可用")
 		}
