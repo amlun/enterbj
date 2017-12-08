@@ -23,7 +23,7 @@ var (
 	statusMutex sync.Mutex
 	checkMutex  sync.Mutex
 	eMail       = email.NewEmail()
-	check       bool
+	status      bool
 	lastCheck   = LastCheck{}
 )
 
@@ -115,35 +115,29 @@ func main() {
 // 发送邮件
 func sendMail(subject, text string) {
 	mailMutex.Lock()
-	defer mailMutex.Unlock()
-
 	logrus.Infof("sendMail(%s, %s)", subject, text)
 	eMail.Subject = subject
 	eMail.Text = []byte(text)
 	if err := eMail.Send(conf.Mail.SmtpHost+":"+conf.Mail.SmtpPort, smtpAuth); err != nil {
 		logrus.Error(err)
 	}
+	mailMutex.Unlock()
 }
 
 // 检查服务状态
 func checkServiceStatus() {
 	statusMutex.Lock()
-	defer statusMutex.Unlock()
-
 	if err := eClient.CheckServiceStatus(conf.Test.UserId); err != nil {
-		if (lastCheck.Online || lastCheck.lastTime == 0) && check {
-			sendMail("进京证办理服务检查", "当前服务不可用")
-		}
 		lastCheck.Online = false
-		logrus.Error("当前服务不可用")
+		status = false
+		logrus.Info("当前服务不可用")
 	} else {
-		if check {
-			sendMail("进京证办理服务检查", "当前服务可用，请尽快处理")
-		}
 		lastCheck.Online = true
-		logrus.Info("当前服务可用，请尽快处理")
+		status = true
+		logrus.Info("当前服务可用")
 	}
 	lastCheck.lastTime = time.Now().Unix()
+	statusMutex.Unlock()
 }
 
 // TODO
@@ -157,14 +151,14 @@ func checkCar() {
 	} else {
 		for _, car := range info.DataList {
 			if car.ApplyFlag == "1" {
-				check = true
 				text := fmt.Sprintf("该车辆 %s 当前可以申请，请立即申请！", car.LicenseNo)
 				logrus.Warn(text)
-				sendMail("进京证办理提醒", text)
+				if status {
+					sendMail("进京证办理提醒", text)
+				}
 				// TODO 自动申请
 				//eClient.SubmitPaper(conf.Test.UserId, car.LicenseNo, car.)
 			} else {
-				check = false
 				var format string
 				for _, apply := range car.CarApplyArr {
 					switch apply.Status {
